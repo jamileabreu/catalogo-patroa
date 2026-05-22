@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jamile Abreu | A Patroa dos Empregos</title>
+  <meta name="description" content="Consultora de Carreira Estratégica | Talent Partner | Outplacement">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #172636;
+      overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .site-frame-wrap {
+      width: 100vw;
+      min-height: 100vh;
+      overflow: hidden;
+      background: #172636;
+      position: relative;
+    }
+
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: 0;
+      display: block;
+      background: #172636;
+    }
+
+    @media (min-width: 1024px) {
+      .site-frame-wrap {
+        height: 100vh;
+      }
+
+      iframe {
+        transform: scale(1.08);
+        transform-origin: top left;
+        width: calc(100vw / 1.08);
+        height: calc(100vh / 1.08);
+      }
+    }
+
+    @media (min-width: 1440px) {
+      iframe {
+        transform: scale(1.12);
+        width: calc(100vw / 1.12);
+        height: calc(100vh / 1.12);
+      }
+    }
+
+    /* ===== CARD FLUTUANTE MINIMIZÁVEL ===== */
+    .solutions-card {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 20;
+      width: 360px;
+      border-radius: 20px;
+      background: rgba(28, 43, 58, 0.97);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(212, 98, 42, 0.45);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+      max-height: 600px;
+    }
+
+    .solutions-card.minimized {
+      width: auto;
+      max-height: 44px;
+    }
+
+    .solutions-card.minimized .solutions-tabs,
+    .solutions-card.minimized .tab-content {
+      display: none;
+    }
+
+    .solutions-card.minimized .card-header {
+      border-bottom: none;
+    }
+
+    .solutions-card:hover {
+      border-color: rgba(212, 98, 42, 0.75);
+      box-shadow: 0 20px 64px rgba(0, 0, 0, 0.45);
+      transform: translateY(-4px);
+    }
+
+    .solutions-card.minimized:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Header com botão minimizar */
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(212, 98, 42, 0.2);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #D4622A;
+    }
+
+    .minimize-btn {
+      background: none;
+      border: none;
+      color: #D4622A;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .minimize-btn:hover {
+      color: #e67335;
+      transform: scale(1.2);
+    }
+
+    /* Abas/Tabs */
+    .solutions-tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(212, 98, 42, 0.2);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .tab-button {
+      flex: 1;
+      padding: 14px 12px;
+      border: none;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab-button:hover {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .tab-button.active {
+      color: #D4622A;
+      border-bottom-color: #D4622A;
+      background: rgba(212, 98, 42, 0.08);
+    }
+
+    /* Conteúdo das Abas */
+    .tab-content {
+      display: none;
+      padding: 24px;
+      color: #fff;
+      animation: fadeIn 0.3s ease;
+      max-height: 450px;
+      overflow-y: auto;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Estilo geral dos tabs */
+    .solution-badge {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(212, 98, 42, 0.18);
+      color: #D4622A;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+
+    .solution-title {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .solution-desc {
+      font-size: 13px;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.82);
+      margin-bottom: 16px;
+    }
+
+    .solution-list {
+      margin-bottom: 18px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .solution-list li {
+      font-size: 12px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.75);
+      margin-bottom: 8px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .solution-list li:before {
+      content: "→";
+      color: #D4622A;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .cta-text {
+      font-size: 12px;
+      color: rgba(212, 98, 42, 0.9);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+
+    .solution-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 44px;
+      border-radius: 999px;
+      background: #D4622A;
+      color: #1C2B3A;
+      font-weight: 800;
+      text-decoration: none;
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 20px rgba(212, 98, 42, 0.25);
+    }
+
+    .solution-button:hover {
+      background: #e67335;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(212, 98, 42, 0.35);
+    }
+
+    /* Destaque de áreas */
+    .areas-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .area-tag {
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(212, 98, 42, 0.12);
+      border: 1px solid rgba(212, 98, 42, 0.25);
+      color: rgba(212, 98, 42, 0.9);
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      letter-spacing: 0.03em;
+    }
+
+    /* ===== SEÇÃO GRÁFICO 3D ===== */
+    .chart-section {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 280px;
+      background: linear-gradient(180deg, rgba(23, 38, 54, 0) 0%, rgba(23, 38, 54, 0.95) 40%, rgba(23, 38, 54, 1) 100%);
+      z-index: 15;
+      pointer-events: none;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 24px 24px 24px;
+      gap: 40px;
+    }
+
+    .chart-container {
+      flex: 0 0 auto;
+      width: 180px;
+      height: 200px;
+      pointer-events: auto;
+    }
+
+    #chartCanvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .chart-info {
+      flex: 1;
+      color: #fff;
+      pointer-events: auto;
+      max-width: 500px;
+    }
+
+    .chart-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #D4622A;
+      letter-spacing: 0.05em;
+    }
+
+    .chart-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .stat-dot.direct {
+      background: #D4622A;
+    }
+
+    .stat-dot.indirect {
+      background: rgba(212, 98, 42, 0.4);
+    }
+
+    .stat-text {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .stat-percent {
+      font-weight: 700;
+      color: #D4622A;
+    }
+
+    .vacancy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px;
+      border-radius: 999px;
+      background: #D4622A;
+      color: #1C2B3A;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 20px rgba(212, 98, 42, 0.25);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .vacancy-btn:hover {
+      background: #e67335;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(212, 98, 42, 0.35);
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .solutions-card {
+        right: 12px;
+        bottom: 12px;
+        left: 12px;
+        width: auto;
+        border-radius: 14px;
+      }
+
+      .tab-button {
+        padding: 12px 10px;
+        font-size: 10px;
+      }
+
+      .tab-content {
+        padding: 18px;
+        max-height: 400px;
+      }
+
+      .solution-title {
+        font-size: 16px;
+      }
+
+      .solution-desc {
+        font-size: 12px;
+      }
+
+      .solution-button {
+        min-height: 40px;
+        font-size: 12px;
+      }
+
+      .areas-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .chart-section {
+        height: 320px;
+        gap: 24px;
+        padding: 0 16px 16px 16px;
+      }
+
+      .chart-container {
+        width: 140px;
+        height: 160px;
+      }
+
+      .chart-info {
+        max-width: none;
+      }
+
+      .chart-title {
+        font-size: 14px;
+      }
+
+      .vacancy-btn {
+        width: 100%;
+        margin-top: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .solutions-card {
+        bottom: 8px;
+        right: 8px;
+        left: 8px;
+      }
+
+      .tab-content {
+        padding: 14px;
+        max-height: 350px;
+      }
+
+      .solution-title {
+        font-size: 15px;
+        margin-bottom: 10px;
+      }
+
+      .solution-desc {
+        font-size: 12px;
+        margin-bottom: 12px;
+      }
+
+      .solution-button {
+        min-height: 38px;
+        font-size: 12px;
+      }
+
+      .areas-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+
+      .area-tag {
+        font-size: 10px;
+        padding: 6px 8px;
+      }
+
+      .chart-section {
+        height: 280px;
+        flex-direction: column;
+        gap: 16px;
+        padding-bottom: 16px;
+      }
+
+      .chart-container {
+        width: 120px;
+        height: 140px;
+        margin: 0 auto;
+      }
+
+      .chart-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .chart-title {
+        font-size: 13px;
+        margin-bottom: 10px;
+      }
+
+      .vacancy-btn {
+        font-size: 11px;
+        padding: 10px 16px;
+      }
+    }
+
+    /* ===== SOCIAL LINKS ===== */
+    .social-link-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: transparent;
+      border: 2px solid #D4622A;
+      color: #D4622A;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .social-link-icon:hover {
+      background: rgba(212, 98, 42, 0.15);
+      border-color: #e67335;
+      color: #e67335;
+      transform: scale(1.1);
+    }
+
+    /* ===== FEEDBACK MODAL ===== */
+    .feedback-modal {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 25;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .feedback-modal.active {
+      display: flex;
+    }
+
+    .feedback-modal-content {
+      background: rgba(28, 43, 58, 0.98);
+      border: 1px solid rgba(212, 98, 42, 0.45);
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 600px;
+      width: 100%;
+      color: #fff;
+      position: relative;
+      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .feedback-close {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 24px;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .feedback-close:hover {
+      color: #fff;
+    }
+
+    .feedback-modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #D4622A;
+      margin-bottom: 24px;
+      letter-spacing: 0.05em;
+    }
+
+    .feedback-modal-items {
+      display: grid;
+      gap: 16px;
+    }
+
+    .feedback-modal-item {
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(212, 98, 42, 0.08);
+      border: 1px solid rgba(212, 98, 42, 0.25);
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+
+    .feedback-modal-item:hover {
+      background: rgba(212, 98, 42, 0.15);
+      border-color: rgba(212, 98, 42, 0.5);
+      transform: translateX(4px);
+    }
+
+    .feedback-modal-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #D4622A;
+      margin-bottom: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    .feedback-modal-desc {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 1.4;
+    }
+
+    @media (max-width: 768px) {
+      .social-link-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 12px;
+      }
+
+      .feedback-modal-content {
+        padding: 24px;
+      }
+
+      .feedback-modal-title {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-frame-wrap">
+    <iframe
+      src="https://jamileabreurh.github.io/catalogo-patroa/"
+      title="Catálogo A Patroa dos Empregos"
+      loading="eager">
+    </iframe>
+  </div>
+
+  <!-- CARD COM ABAS MINIMIZÁVEL -->
+  <div class="solutions-card" id="solutionsCard">
+    <!-- Header com botão minimizar -->
+    <div class="card-header">
+      <div class="card-title">Soluções B2B</div>
+      <button class="minimize-btn" id="minimizeBtn" title="Minimizar">−</button>
+    </div>
+
+    <!-- Tabs Header -->
+    <div class="solutions-tabs">
+      <button class="tab-button active" data-tab="talent-partner">
+        Talent Partner
+      </button>
+      <button class="tab-button" data-tab="outplacement">
+        Outplacement
+      </button>
+    </div>
+
+    <!-- TAB 1: TALENT PARTNER -->
+    <div id="talent-partner" class="tab-content active">
+      <span class="solution-badge">Serviço B2B</span>
+      <div class="solution-title">Contrate talentos verificados</div>
+      <p class="solution-desc">Você descreve o perfil que precisa. Eu indico talentos já curadorizados da minha rede, com parecer técnico. Sem custos para sua empresa.</p>
+      
+      <div class="areas-grid">
+        <div class="area-tag">Engenharia</div>
+        <div class="area-tag">Financeiro</div>
+        <div class="area-tag">RH & Gente</div>
+        <div class="area-tag">Operações</div>
+        <div class="area-tag">Comercial</div>
+        <div class="area-tag">Liderança</div>
+      </div>
+
+      <ul class="solution-list">
+        <li>Curadoria de talentos da minha rede</li>
+        <li>Indicação com parecer técnico e humano</li>
+        <li>Profissionais já avaliados</li>
+        <li>Você negocia diretamente com o talento</li>
+      </ul>
+
+      <div class="cta-text">➜ Peça talentos agora</div>
+      <a href="https://wa.me/5571992882255?text=Oi%2C%20Jamile.%20Sou%20de%20uma%20empresa%20e%20quero%20conhecer%20talentos%20dispon%C3%ADveis%20sem%20custo.%20Estamos%20buscando%20um%20perfil%20para%3A%20%5Bdescreva%20cargo%2C%20%C3%A1rea%2C%20cidade%2C%20modelo%20de%20trabalho%20e%20principais%20requisitos%5D"
+         target="_blank"
+         rel="noopener"
+         class="solution-button">
+        Conectar no WhatsApp
+      </a>
+    </div>
+
+    <!-- TAB 2: OUTPLACEMENT -->
+    <div id="outplacement" class="tab-content">
+      <span class="solution-badge">Serviço B2B</span>
+      <div class="solution-title">Reposicione seus talentos em transição</div>
+      <p class="solution-desc">Apoio humanizado e estratégico para profissionais em transição. Diagnóstico completo, reposicionamento e preparação.</p>
+
+      <ul class="solution-list">
+        <li>Diagnóstico de posicionamento</li>
+        <li>Currículo estratégico</li>
+        <li>LinkedIn otimizado</li>
+        <li>Preparação para entrevistas</li>
+        <li>Plano de ação de recolocação</li>
+        <li>Acompanhamento contínuo</li>
+      </ul>
+
+      <div class="cta-text">➜ Falar sobre outplacement</div>
+      <a href="https://wa.me/5571992882255?text=Oi%2C%20Jamile.%20Quero%20entender%20uma%20proposta%20de%20outplacement%20para%20a%20empresa."
+         target="_blank"
+         rel="noopener"
+         class="solution-button">
+        Solicitar Proposta
+      </a>
+    </div>
+
+  </div>
+
+  <!-- SOCIAL LINKS + FEEDBACK (Centro) -->
+  <div style="position: fixed; left: 50%; transform: translateX(-50%); bottom: 100px; z-index: 19; display: flex; gap: 16px; align-items: center;">
+    <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6);">Conecte</div>
+    <a href="https://www.linkedin.com/in/jamileabreurh/" target="_blank" rel="noopener" class="social-link-icon" title="LinkedIn">
+      in
+    </a>
+    <a href="https://www.instagram.com/jamileabreurh/" target="_blank" rel="noopener" class="social-link-icon" title="Instagram">
+      ◉
+    </a>
+    <a href="javascript:void(0)" id="feedbackBtn" class="social-link-icon" style="cursor: pointer;" title="Ver Feedback">
+      ★
+    </a>
+  </div>
+
+  <!-- MODAL FEEDBACK -->
+  <div id="feedbackModal" class="feedback-modal">
+    <div class="feedback-modal-content">
+      <button class="feedback-close" id="feedbackCloseBtn">✕</button>
+      <div class="feedback-modal-title">Feedback & Recomendações</div>
+      
+      <div class="feedback-modal-items">
+        <a href="https://www.instagram.com/stories/highlights/18112066294661410/" target="_blank" rel="noopener" class="feedback-modal-item">
+          <div class="feedback-modal-label">📸 Instagram Stories - Feedback</div>
+          <div class="feedback-modal-desc">Depoimentos de profissionais transformados</div>
+        </a>
+
+        <a href="https://www.instagram.com/stories/highlights/18055409387314303/" target="_blank" rel="noopener" class="feedback-modal-item">
+          <div class="feedback-modal-label">📸 Instagram Stories - Resultados</div>
+          <div class="feedback-modal-desc">Histórias de sucesso e recolocações</div>
+        </a>
+
+        <a href="https://www.linkedin.com/in/jamileabreurh/details/recommendations/?detailScreenTabIndex=2" target="_blank" rel="noopener" class="feedback-modal-item">
+          <div class="feedback-modal-label">🔗 LinkedIn Recomendações</div>
+          <div class="feedback-modal-desc">Profissionais recomendando expertise</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO COM GRÁFICO 3D + INFO VAGAS -->
+  <div class="chart-section">
+    <div class="chart-container">
+      <canvas id="chartCanvas"></canvas>
+    </div>
+    
+    <div class="chart-info">
+      <div class="chart-title">Taxa de Recolocação</div>
+      
+      <div class="chart-stats">
+        <div class="stat-item">
+          <div class="stat-dot direct"></div>
+          <div class="stat-text"><span class="stat-percent">70%</span> Recolocação Direta</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-dot indirect"></div>
+          <div class="stat-text"><span class="stat-percent">30%</span> Recolocação Indireta</div>
+        </div>
+      </div>
+
+      <p style="font-size: 12px; color: rgba(255, 255, 255, 0.75); margin-bottom: 16px; line-height: 1.5;">
+        Resultados comprovados de recolocação estratégica e posicionamento profissional efetivo.
+      </p>
+
+      <a href="https://wa.me/5571992882255?text=Oi%2C%20Jamile.%20Tenho%20uma%20vaga%20aberta%20e%20gostaria%20de%20divulgar%20na%20sua%20comunidade%20de%209%20mil%20profissionais%20para%20encontrar%20o%20talento%20certo."
+         target="_blank"
+         rel="noopener"
+         class="vacancy-btn">
+        Divulgar Vaga na Comunidade
+      </a>
+      <div style="font-size: 10px; color: rgba(212, 98, 42, 0.8); margin-top: 8px; text-transform: uppercase; letter-spacing: 0.04em;">
+        + 9 mil profissionais
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // TAB SWITCHING
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const tabName = button.getAttribute('data-tab');
+
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        button.classList.add('active');
+        document.getElementById(tabName).classList.add('active');
+      });
+    });
+
+    // MINIMIZE BUTTON
+    const minimizeBtn = document.getElementById('minimizeBtn');
+    const solutionsCard = document.getElementById('solutionsCard');
+
+    minimizeBtn.addEventListener('click', () => {
+      solutionsCard.classList.toggle('minimized');
+      minimizeBtn.textContent = solutionsCard.classList.contains('minimized') ? '+' : '−';
+    });
+
+    // DONUT CHART COM CHART.JS
+    const ctx = document.getElementById('chartCanvas').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Recolocação Direta', 'Recolocação Indireta'],
+        datasets: [{
+          data: [70, 30],
+          backgroundColor: ['#D4622A', '#6B4422'],
+          borderColor: '#172636',
+          borderWidth: 3,
+          borderRadius: 8,
+          hoverOffset: 8,
+          spacing: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        cutout: '65%',
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            enabled: true,
+            backgroundColor: 'rgba(28, 43, 58, 0.95)',
+            titleColor: '#D4622A',
+            bodyColor: '#fff',
+            borderColor: 'rgba(212, 98, 42, 0.5)',
+            borderWidth: 1,
+            padding: 10,
+            titleFont: { weight: 'bold', size: 12 },
+            bodyFont: { size: 11 },
+            displayColors: false,
+            callbacks: {
+              label: function(context) {
+                return context.parsed + '%';
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // FEEDBACK MODAL
+    const feedbackBtn = document.getElementById('feedbackBtn');
+    const feedbackModal = document.getElementById('feedbackModal');
+    const feedbackCloseBtn = document.getElementById('feedbackCloseBtn');
+
+    feedbackBtn.addEventListener('click', () => {
+      feedbackModal.classList.add('active');
+    });
+
+    feedbackCloseBtn.addEventListener('click', () => {
+      feedbackModal.classList.remove('active');
+    });
+
+    feedbackModal.addEventListener('click', (e) => {
+      if (e.target === feedbackModal) {
+        feedbackModal.classList.remove('active');
+      }
+    });
+  </script>
+
+</body>
+</html>
