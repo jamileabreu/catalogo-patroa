@@ -94,6 +94,41 @@
     :focus-visible{outline:3px solid rgba(88,197,255,.75);outline-offset:3px}
     @media(min-width:1020px){nav{gap:15px;font-size:.76rem}}
     @media(min-width:1180px){nav{gap:23px;font-size:.82rem}}
+  
+
+    /* Ajuste fino — seção de situações */
+    .pain .section-head{align-items:center}
+    .pain .section-head .lead{align-self:center;margin-top:18px}
+    .pain-grid{align-items:stretch}
+    .pain-card{
+      min-height:132px;
+      padding:28px 30px;
+      display:grid;
+      grid-template-columns:34px minmax(0,1fr);
+      align-items:center;
+      column-gap:12px;
+      background:rgba(255,255,255,.94);
+      border:1px solid rgba(31,62,92,.12);
+    }
+    .pain-card .num{align-self:center;margin:0;line-height:1}
+    .pain-card b{
+      display:flex;
+      align-items:center;
+      min-height:54px;
+      margin:0;
+      line-height:1.35;
+      text-align:left;
+    }
+    .pain{padding-bottom:76px}
+    .bridge{padding-top:80px}
+    @media(max-width:759px){
+      .pain .section-head .lead{margin-top:0}
+      .pain-card{min-height:116px;padding:24px 22px;grid-template-columns:30px minmax(0,1fr)}
+      .pain-card b{min-height:auto}
+      .pain{padding-bottom:64px}
+      .bridge{padding-top:68px}
+    }
+
   </style>
 </head>
 <body>
