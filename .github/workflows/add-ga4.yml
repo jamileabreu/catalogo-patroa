@@ -1,0 +1,62 @@
+name: Add GA4 tag
+
+on:
+  push:
+    paths:
+      - '.github/workflows/add-ga4.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  add-ga4:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Insert Google Analytics GA4 tag
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
+          measurement_id = 'G-R4P79J8GM1'
+
+          if measurement_id in html:
+              print('GA4 tag already present; no change needed.')
+              raise SystemExit(0)
+
+          tag = '''<!-- Google tag (gtag.js) -->
+          <script async src="https://www.googletagmanager.com/gtag/js?id=G-R4P79J8GM1"></script>
+          <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-R4P79J8GM1');
+          </script>'''
+
+          if '<head>' not in html:
+              raise SystemExit('Could not find <head> in index.html')
+
+          html = html.replace('<head>', '<head>\n  ' + tag, 1)
+          path.write_text(html, encoding='utf-8')
+          print('GA4 tag inserted into index.html')
+          PY
+
+      - name: Commit and push change
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Adicionar Google Analytics GA4"
+          git push
